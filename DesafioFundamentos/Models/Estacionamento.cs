@@ -2,14 +2,29 @@ namespace DesafioFundamentos.Models
 {
     public class Estacionamento
     {
-        private decimal precoInicial = 0;
+        private decimal taxaDeEntrada = 0;
         private decimal precoPorHora = 0;
+        private int totalDeVagas = 0;
         private List<string> veiculos = new();
+        private List<DateTime> horaDeEntrada = new();
 
-        public Estacionamento(decimal precoInicial, decimal precoPorHora)
+        public Estacionamento(decimal taxaDeEntrada, decimal precoPorHora, int totalDeVagas)
         {
-            this.precoInicial = precoInicial;
+            this.taxaDeEntrada = taxaDeEntrada;
             this.precoPorHora = precoPorHora;
+            this.totalDeVagas = totalDeVagas;
+        }
+
+        public void DisponibilidadeVagas()
+        {
+            Console.WriteLine($"Total de vagas do Estacionamento: {totalDeVagas}");
+
+            Console.WriteLine($"Vagas Ocupadas: {veiculos.Count}");
+
+            //Calculo de vagas Livres
+            int vagasLivres = totalDeVagas - veiculos.Count;
+
+            Console.WriteLine($"Vagas Livres: {vagasLivres}");
         }
 
         public void AdicionarVeiculo()
@@ -33,6 +48,8 @@ namespace DesafioFundamentos.Models
                     veiculos.Add(veiculoValido);
                     vazioOuEmBranco = false;
                 }
+
+                horaDeEntrada.Add(DateTime.Now);
                 
             }
             
@@ -58,10 +75,22 @@ namespace DesafioFundamentos.Models
                     // Verifica se o veículo existe
                     if (veiculos.Any(x => x.ToUpper() == placa.ToUpper()))
                     {
-                        Console.WriteLine("Digite a quantidade de horas que o veículo permaneceu estacionado:");
+                        //índice da lista
+                        int indice = veiculos.IndexOf(placa);
 
+                        //Hora de saída
+                        DateTime horaDeSaida = DateTime.Now;
+
+                        //Calculo do tempo que ficou estacionado
+                        TimeSpan tempoEstacionado = horaDeSaida - horaDeEntrada[indice];
+
+                        Console.WriteLine($"O veículo de placa {veiculos[indice]} entrou às {horaDeEntrada[indice]:hh:mm:ss} e está saindo às {horaDeSaida:hh:mm:ss}.");
+
+                        Console.WriteLine($"Permanecendo {tempoEstacionado.Hours}:{tempoEstacionado.Minutes}:{tempoEstacionado.Seconds} estacionado.");
+
+                        //TODO: ajustar o calculo de preços
                         int horas = Convert.ToInt32(Console.ReadLine());
-                        decimal valorTotal = precoInicial + precoPorHora * horas; 
+                        decimal valorTotal = taxaDeEntrada + precoPorHora * horas; 
 
                         veiculos.Remove(placa);
 

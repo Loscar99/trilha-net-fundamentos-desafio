@@ -3,18 +3,26 @@
 // Coloca o encoding para UTF8 para exibir acentuação
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-decimal precoInicial = 0;
+decimal taxaDeEntrada = 0;
 decimal precoPorHora = 0;
-
+int totalVagas = 0;
+ 
 Console.WriteLine("Seja bem vindo ao sistema de estacionamento!\n" +
-                  "Digite o preço inicial:");
-precoInicial = Convert.ToDecimal(Console.ReadLine());
+                  "Vamos iniciar as configurações inciais:");
 
-Console.WriteLine("Agora digite o preço por hora:");
+Console.Write("Total de vagas do estacionamento: ");
+totalVagas = Convert.ToInt32(Console.ReadLine());
+
+Console.Write("Preço/Taxa de entrada:");
+taxaDeEntrada = Convert.ToDecimal(Console.ReadLine());
+
+Console.Write("Preço por hora:");
 precoPorHora = Convert.ToDecimal(Console.ReadLine());
 
+Console.Clear();
+
 // Instancia a classe Estacionamento, já com os valores obtidos anteriormente
-Estacionamento es = new(precoInicial, precoPorHora);
+Estacionamento es = new(taxaDeEntrada, precoPorHora, totalVagas);
 
 string opcao = string.Empty;
 bool exibirMenu = true;
@@ -24,26 +32,30 @@ while (exibirMenu)
 {
     
     Console.WriteLine("Digite a sua opção:");
-    Console.WriteLine("1 - Cadastrar veículo");
-    Console.WriteLine("2 - Remover veículo");
-    Console.WriteLine("3 - Listar veículos");
-    Console.WriteLine("4 - Encerrar");
+    Console.WriteLine("1 - Consultar Vagas Disponiveis");
+    Console.WriteLine("2 - Cadastrar veículo");
+    Console.WriteLine("3 - Remover veículo");
+    Console.WriteLine("4 - Listar veículos");
+    Console.WriteLine("5 - Encerrar");
 
     switch (Console.ReadLine())
     {
         case "1":
+            es.DisponibilidadeVagas();
+            break;
+        case "2":
             es.AdicionarVeiculo();
             break;
 
-        case "2":
+        case "3":
             es.RemoverVeiculo();
             break;
 
-        case "3":
+        case "4":
             es.ListarVeiculos();
             break;
 
-        case "4":
+        case "5":
             exibirMenu = false;
             break;
 
