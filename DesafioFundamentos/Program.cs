@@ -3,6 +3,22 @@
 // Coloca o encoding para UTF8 para exibir acentuação
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+// DateTime data1 = DateTime.Now;
+// DateTime data2 = Convert.ToDateTime("08:30");
+
+// TimeSpan data3 = data2 - data1;
+// //double totalHoras = data3.TotalHours;
+// decimal valorPorHora = 10.00m;
+
+// decimal valorTotal = Convert.ToDecimal(data3.TotalHours) * valorPorHora;
+
+// valorTotal = Math.Round(valorTotal, 2);
+
+// Console.WriteLine(data1);
+// Console.WriteLine(data2);
+// Console.WriteLine(data3);
+// Console.WriteLine(valorTotal);
+
 decimal taxaDeEntrada = 0;
 decimal precoPorHora = 0;
 int totalVagas = 0;
@@ -13,10 +29,10 @@ Console.WriteLine("Seja bem vindo ao sistema de estacionamento!\n" +
 Console.Write("Total de vagas do estacionamento: ");
 totalVagas = Convert.ToInt32(Console.ReadLine());
 
-Console.Write("Preço/Taxa de entrada:");
+Console.Write("Preço/Taxa de entrada: ");
 taxaDeEntrada = Convert.ToDecimal(Console.ReadLine());
 
-Console.Write("Preço por hora:");
+Console.Write("Preço por hora: ");
 precoPorHora = Convert.ToDecimal(Console.ReadLine());
 
 Console.Clear();

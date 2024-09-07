@@ -5,6 +5,7 @@ namespace DesafioFundamentos.Models
         private decimal taxaDeEntrada = 0;
         private decimal precoPorHora = 0;
         private int totalDeVagas = 0;
+        private int vagasLivres = 0; 
         private List<string> veiculos = new();
         private List<DateTime> horaDeEntrada = new();
 
@@ -22,37 +23,61 @@ namespace DesafioFundamentos.Models
             Console.WriteLine($"Vagas Ocupadas: {veiculos.Count}");
 
             //Calculo de vagas Livres
-            int vagasLivres = totalDeVagas - veiculos.Count;
+            int  vagasLivres = totalDeVagas - veiculos.Count;
 
             Console.WriteLine($"Vagas Livres: {vagasLivres}");
         }
 
         public void AdicionarVeiculo()
         {
-            bool vazioOuEmBranco = true;
-            while(vazioOuEmBranco == true)
+            //verifica se tem vagas livres
+            if(veiculos.Count >= totalDeVagas)
             {
-                Console.WriteLine("Digite a placa do veículo para estacionar:");
-                string veiculoValido = Console.ReadLine();
-
-                //Verifica se a variável (veiculoValido) é válida (não está vazia ou apenas com espaços em branco)
-                if(string.IsNullOrWhiteSpace(veiculoValido) == true)
-                {
-                    Console.WriteLine("Você não informou a placa do carro. Este é um item OBRIGATÓRIO!");
-                    Console.WriteLine("Por favor, Informe a placa do carro:");
-
-                    vazioOuEmBranco = true;
-                }
-                else
-                {
-                    veiculos.Add(veiculoValido);
-                    vazioOuEmBranco = false;
-                }
-
-                horaDeEntrada.Add(DateTime.Now);
-                
+                Console.WriteLine("Descupe. Estamos sem vagas disponíveis.");
             }
-            
+            else
+            {
+                bool vazioOuEmBranco = true;
+
+                while(vazioOuEmBranco == true)
+                {
+                    Console.WriteLine("Digite a placa do veículo para estacionar:");
+                    string placaValida = Console.ReadLine();
+
+                    //Verifica se a variável (placaValida) não está vazia ou apenas com espaços em branco:
+                    if(string.IsNullOrWhiteSpace(placaValida))
+                    {
+                        Console.WriteLine("Você não informou a placa do carro. Este é um item OBRIGATÓRIO!");
+                        Console.WriteLine("Por favor, Informe a placa do carro:");
+
+                        vazioOuEmBranco = true;
+                    }
+                    else
+                    {
+                        ///Garanti que não tenha placas repetidas
+                        if(veiculos.Contains(placaValida))
+                        {
+                            Console.WriteLine();
+
+                            Console.WriteLine("Descupe, mas já existe um veículo cadastrado com essa placa.");
+                            Console.WriteLine("Verifique se digitou corretamente e tente novamente.");
+
+                            Console.WriteLine();
+
+                            vazioOuEmBranco = true;
+                        }
+                        else
+                        {
+                            veiculos.Add(placaValida);
+                            horaDeEntrada.Add(DateTime.Now);
+
+                            vazioOuEmBranco = false;
+                        }
+                    
+                    }
+    
+                }
+            }
         }
 
         public void RemoverVeiculo()
@@ -84,20 +109,43 @@ namespace DesafioFundamentos.Models
                         //Calculo do tempo que ficou estacionado
                         TimeSpan tempoEstacionado = horaDeSaida - horaDeEntrada[indice];
 
-                        Console.WriteLine($"O veículo de placa {veiculos[indice]} entrou às {horaDeEntrada[indice]:hh:mm:ss} e está saindo às {horaDeSaida:hh:mm:ss}.");
+                        //Calculo do Valor Total a ser pago
+                        decimal valorTotal = taxaDeEntrada + precoPorHora * Convert.ToDecimal(tempoEstacionado.TotalHours); 
 
-                        Console.WriteLine($"Permanecendo {tempoEstacionado.Hours}:{tempoEstacionado.Minutes}:{tempoEstacionado.Seconds} estacionado.");
+                        Console.Clear();
 
-                        //TODO: ajustar o calculo de preços
-                        int horas = Convert.ToInt32(Console.ReadLine());
-                        decimal valorTotal = taxaDeEntrada + precoPorHora * horas; 
+                        //Extrato
+                        Console.WriteLine(); //pular linha
+                        Console.WriteLine("EXTRATO:");
+                        Console.WriteLine("------------------------------------");
+                        Console.WriteLine($"Veículo (palca):        {veiculos[indice]:hh:mm:ss}");
+                        Console.WriteLine($"Horário de Entrada:     {horaDeEntrada[indice]:hh:mm:ss}");
+                        Console.WriteLine($"Horário de Saída:       {horaDeSaida:hh:mm:ss}");
+                        Console.WriteLine($"Tempo Estacionado:      {tempoEstacionado:hh\\:mm\\:ss}");
 
-                        veiculos.Remove(placa);
+                        Console.WriteLine("------------------------------------");
+                        Console.WriteLine($"Taxa de Entrada:         {taxaDeEntrada:C2}");
+                        Console.WriteLine($"Preço por hora:          {precoPorHora:C2}");
+                        Console.WriteLine($"Valor:                   R$ {Math.Round(precoPorHora * Convert.ToDecimal(tempoEstacionado.TotalHours), 2)}  ");
 
-                        Console.WriteLine($"O veículo {placa} foi removido e o preço total foi de: R$ {valorTotal}");
+                        Console.WriteLine("------------------------------------");
+                        Console.WriteLine($"Valor Total:             R$ {Math.Round(valorTotal, 2)}");
+                        Console.WriteLine(); //pular linha
 
-                        Console.WriteLine("Pressione Enter para confirmar o pagamento.");
+                        
+                        Console.WriteLine("Pressione Enter para confirmar o pagamento");
+
                         Console.ReadLine();
+
+                        Console.WriteLine("Pagamento Recebido! \nObrigado por usar nosso serviços.");
+
+                        Console.WriteLine(); // pular linha
+
+                        //remover veículo o horário de entrada da lista
+                        veiculos.RemoveAt(indice);
+                        horaDeEntrada.RemoveAt(indice);
+
+                        //encerrar laço de repetição
                         repetirLaco = false;
                     }
                     else
